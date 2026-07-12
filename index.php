@@ -1,0 +1,133 @@
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>SNACKVERSE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- ===== BACKGROUND MUSIC ===== -->
+<audio id="bgMusic"></audio>
+
+<!-- ===== NAVBAR ===== -->
+<header class="navbar">
+  <h1>SNACKVERSE</h1>
+  <nav>
+    <a href="#products">Produk</a>
+    <a href="#location">Lokasi</a>
+    <a href="#" id="openCart">Keranjang</a>
+    <a href="about.php">About Me</a>
+  </nav>
+</header>
+
+<!-- ===== WHATSAPP FLOATING ===== -->
+<a href="https://wa.me/6285711018490" target="_blank" class="cs-btn">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="40">
+</a>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <video autoplay muted loop playsinline>
+    <source src="assets/Restaurant food cinematic video advertisement.mp4" type="video/mp4">
+  </video>
+
+  <div class="hero-text">
+    <h2>Snack Lokal, Rasa Internasional</h2>
+    <p>Crunch. Fun. Addictive.</p>
+  </div>
+</section>
+
+<!-- ===== PRODUCTS ===== -->
+<section id="products" class="products">
+  <h2>Produk Terlaris</h2>
+
+  <div class="product-grid">
+    <div class="product">
+      <img src="assets/fianfood.jpeg">
+      <h3>Basreng Pedas</h3>
+      <p>Rp 26.500</p>
+      <button
+        data-id="1"
+        data-name="Basreng Pedas"
+        data-price="26500">
+        Tambah
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LOCATION ===== -->
+<section id="location" class="location">
+  <h2>Toko Offline</h2>
+  <iframe
+    src="https://www.google.com/maps?q=Jakarta&output=embed"
+    loading="lazy">
+  </iframe>
+</section>
+
+<!-- ===== CART PANEL ===== -->
+<div class="cart-panel" id="cartPanel">
+  <h2>Keranjang</h2>
+  <div class="cart-items"></div>
+  <div class="cart-total"></div>
+  <button class="checkout-btn">Checkout</button>
+</div>
+
+<!-- ===== CURSOR ===== -->
+<div class="cursor"></div>
+
+<!-- ===== MUSIC SCRIPT ===== -->
+<script>
+const playlist = [
+  "assets/fianfood1.mp3",
+  "assets/fianfood2.mp3"
+];
+
+const audio = document.getElementById("bgMusic");
+let index = 0;
+
+audio.src = playlist[index];
+audio.volume = 0;
+audio.loop = false;
+
+audio.addEventListener("ended", () => {
+  index = (index + 1) % playlist.length;
+  audio.src = playlist[index];
+  audio.play();
+});
+
+// autoplay after first click (browser policy)
+document.addEventListener("click", function startMusic() {
+  audio.play();
+  document.removeEventListener("click", startMusic);
+});
+
+// fade in
+let v = 0;
+const fade = setInterval(() => {
+  if (v < 0.25) {
+    v += 0.01;
+    audio.volume = v;
+  } else {
+    clearInterval(fade);
+  }
+}, 100);
+</script>
+
+<!-- ===== CORE JS ===== -->
+<script src="js/main.js"></script>
+<script src="js/cart.js"></script>
+
+<!-- ===== CINEMATIC ===== -->
+<script src="js/gsap.min.js"></script>
+<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/lenis.min.js"></script>
+<script src="js/cinematic.js"></script>
+
+</body>
+</html>
