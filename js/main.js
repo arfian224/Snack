@@ -63,7 +63,7 @@ cartBadge.style.cssText = `
 
 document.querySelector(".checkout-btn").addEventListener("click", () => {
     localStorage.setItem("cart", JSON.stringify(cart));
-    window.location.href = "checkout.php";
+    window.location.href = "checkout.html";
 });
 
 document.querySelectorAll(".product button").forEach(btn => {
