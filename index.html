@@ -51,6 +51,10 @@
       <img src="assets/fianfood.jpeg">
       <h3>Basreng Pedas</h3>
       <p>Rp 26.500</p>
+
+        <p class="stock-info">
+    Stok Ready: <strong id="stock-basreng">...</strong>
+  </p>
       
 <button
   data-id="basreng"
@@ -147,6 +151,46 @@ checkoutForm.addEventListener("submit", function(event) {
     })
     .submitOrder(formData);
 });
+</script>
+  
+  <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwlpFqoVafYpNEHM-cmXrdIVKmioEz2Zqyn8erxo3lLnHwy06B9lQu9Y9KOUCKa-6s6/exec";
+
+async function loadStock() {
+  try {
+    const response = await fetch(API_URL + "?action=products");
+    const result = await response.json();
+
+    result.products.forEach(product => {
+      const stockElement =
+        document.getElementById("stock-" + product.id);
+
+      if (stockElement) {
+        stockElement.textContent = product.stock;
+      }
+
+      const button =
+        document.querySelector(
+          `[data-id="${product.id}"]`
+        );
+
+      if (button) {
+        if (product.stock <= 0) {
+          button.disabled = true;
+          button.textContent = "Stok Habis";
+        } else {
+          button.disabled = false;
+          button.textContent = "Tambah";
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error("Gagal mengambil stok:", error);
+  }
+}
+
+loadStock();
 </script>
 
 <!-- ===== CORE JS ===== -->
