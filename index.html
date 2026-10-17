@@ -152,20 +152,58 @@ checkoutForm.addEventListener("submit", function(event) {
 });
 </script>
   
-  <script>
+ <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyhaHrTa7wRjHmRpggMmfH5o8lrvmOd4d9ZCAj-Gnqxg0Ag2-CDosqJVzrbXB2FIZ8z/exec";
 
 async function loadStock() {
+
+  const stockElement =
+    document.getElementById("stock-basreng");
+
   try {
-    const response = await fetch(API_URL + "?action=products");
+
+    // Supaya kelihatan bahwa JS mulai bekerja
+    stockElement.textContent = "Memuat...";
+
+    const response = await fetch(
+      API_URL + "?action=products"
+    );
+
+    console.log("HTTP STATUS:", response.status);
+
+    if (!response.ok) {
+      throw new Error(
+        "HTTP Error: " + response.status
+      );
+    }
+
     const result = await response.json();
 
-    result.products.forEach(product => {
-      const stockElement =
-        document.getElementById("stock-" + product.id);
+    console.log("DATA DARI APPS SCRIPT:", result);
 
-      if (stockElement) {
-        stockElement.textContent = product.stock;
+    if (!result.success) {
+      throw new Error(
+        result.message || "API gagal"
+      );
+    }
+
+    result.products.forEach(product => {
+
+      console.log(
+        "Produk:",
+        product.id,
+        "Stok:",
+        product.stock
+      );
+
+      const element =
+        document.getElementById(
+          "stock-" + product.id
+        );
+
+      if (element) {
+        element.textContent =
+          product.stock;
       }
 
       const button =
@@ -174,18 +212,33 @@ async function loadStock() {
         );
 
       if (button) {
-        if (product.stock <= 0) {
+
+        if (Number(product.stock) <= 0) {
+
           button.disabled = true;
-          button.textContent = "Stok Habis";
+          button.textContent =
+            "Stok Habis";
+
         } else {
+
           button.disabled = false;
-          button.textContent = "Tambah";
+          button.textContent =
+            "Tambah";
+
         }
       }
     });
 
   } catch (error) {
-    console.error("Gagal mengambil stok:", error);
+
+    console.error(
+      "ERROR LOAD STOCK:",
+      error
+    );
+
+    stockElement.textContent =
+      "Gagal memuat";
+
   }
 }
 
