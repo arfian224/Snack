@@ -150,101 +150,57 @@ checkoutForm.addEventListener("submit", function(event) {
     })
     .submitOrder(formData);
 });
-</script>
-  
- <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyhaHrTa7wRjHmRpggMmfH5o8lrvmOd4d9ZCAj-Gnqxg0Ag2-CDosqJVzrbXB2FIZ8z/exec";
+</script>  
 
-async function loadStock() {
+<script>
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbyhaHrTa7wRjHmRpggMmfH5o8lrvmOd4d9ZCAj-Gnqxg0Ag2-CDosqJVzrbXB2FIZ8z/exec";
 
-  const stockElement =
-    document.getElementById("stock-basreng");
+fetch(API_URL + "?action=products")
+  .then(response => {
+    console.log("Response:", response);
+    return response.text();
+  })
+  .then(text => {
 
-  try {
+    console.log("ISI RESPONSE:");
+    console.log(text);
 
-    // Supaya kelihatan bahwa JS mulai bekerja
-    stockElement.textContent = "Memuat...";
+    const result = JSON.parse(text);
 
-    const response = await fetch(
-      API_URL + "?action=products"
-    );
+    console.log("JSON:", result);
 
-    console.log("HTTP STATUS:", response.status);
-
-    if (!response.ok) {
-      throw new Error(
-        "HTTP Error: " + response.status
+    const basreng =
+      result.products.find(
+        product => product.id === "basreng"
       );
+
+    if (!basreng) {
+      document.getElementById(
+        "stock-basreng"
+      ).textContent = "Produk tidak ditemukan";
+
+      return;
     }
 
-    const result = await response.json();
+    document.getElementById(
+      "stock-basreng"
+    ).textContent = basreng.stock;
 
-    console.log("DATA DARI APPS SCRIPT:", result);
-
-    if (!result.success) {
-      throw new Error(
-        result.message || "API gagal"
-      );
-    }
-
-    result.products.forEach(product => {
-
-      console.log(
-        "Produk:",
-        product.id,
-        "Stok:",
-        product.stock
-      );
-
-      const element =
-        document.getElementById(
-          "stock-" + product.id
-        );
-
-      if (element) {
-        element.textContent =
-          product.stock;
-      }
-
-      const button =
-        document.querySelector(
-          `[data-id="${product.id}"]`
-        );
-
-      if (button) {
-
-        if (Number(product.stock) <= 0) {
-
-          button.disabled = true;
-          button.textContent =
-            "Stok Habis";
-
-        } else {
-
-          button.disabled = false;
-          button.textContent =
-            "Tambah";
-
-        }
-      }
-    });
-
-  } catch (error) {
+  })
+  .catch(error => {
 
     console.error(
-      "ERROR LOAD STOCK:",
+      "FETCH ERROR:",
       error
     );
 
-    stockElement.textContent =
-      "Gagal memuat";
+    document.getElementById(
+      "stock-basreng"
+    ).textContent = "ERROR";
 
-  }
-}
-
-loadStock();
+  });
 </script>
-
 <!-- ===== CORE JS ===== -->
 <script src="js/main.js"></script>
 <script src="js/cart.js"></script>
