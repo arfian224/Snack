@@ -7,6 +7,38 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+  #orderMessage{
+  margin-top:20px;
+  line-height:1.7;
+}
+
+.success-order{
+  background:#161616;
+  padding:20px;
+  border-radius:15px;
+  border:1px solid #ffb703;
+}
+
+.success-order h3{
+  color:#ffb703;
+  margin-bottom:10px;
+}
+
+.receipt-btn{
+  display:inline-block;
+  padding:12px 20px;
+  background:#ffb703;
+  color:#000;
+  text-decoration:none;
+  border-radius:25px;
+  font-weight:bold;
+  transition:.3s;
+}
+
+.receipt-btn:hover{
+  background:#ffd166;
+  transform:scale(1.03);
+}
 body{
   min-height:100vh;
   background:#0b0b0b;
@@ -510,20 +542,40 @@ checkoutForm.addEventListener(
          BERHASIL
       ==================== */
 
-      message.innerHTML =
-        `
-        Pesanan berhasil!<br>
-        Nomor Pesanan:
-        <strong>
-          ${result.orderId}
-        </strong>
-        <br>
-        Total:
-        <strong>
-          Rp ${Number(result.total)
-            .toLocaleString("id-ID")}
-        </strong>
-        `;
+     message.innerHTML = `
+  <div class="success-order">
+
+    <h3>
+      Pesanan Berhasil ✓
+    </h3>
+
+    <p>
+      Nomor Pesanan:
+      <strong>
+        ${result.orderId}
+      </strong>
+    </p>
+
+    <p>
+      Total:
+      <strong>
+        Rp ${Number(result.total)
+          .toLocaleString("id-ID")}
+      </strong>
+    </p>
+
+    <br>
+
+    <a
+      href="${result.receiptUrl}"
+      target="_blank"
+      class="receipt-btn"
+    >
+      Lihat Kwitansi PDF
+    </a>
+
+  </div>
+`;
 
 
       /* ====================
@@ -542,13 +594,6 @@ checkoutForm.addEventListener(
       /* ====================
          REDIRECT
       ==================== */
-
-      setTimeout(() => {
-
-        window.location.href =
-          "index.html";
-
-      }, 5000);
 
 
     } catch (error) {
